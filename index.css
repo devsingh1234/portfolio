@@ -53,7 +53,7 @@ html, body {
 
 }
 
-h1:hover {
+h1 {
     display: inline-block; 
     transition: .5s;
     color: silver;
