@@ -2,14 +2,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const textContainer = document.getElementById('textContainer');
     const circle = document.getElementById('circle');
     const originalText = "DIVYANSH";
-    const changedText = "DEVLOPER"; // Exact replacement without extra spaces
-    const radius = 150; // Radius for effect
+    const changedText = "DEVELOPER";
+    const radius = 150;
 
     // Split the text into individual <span> elements, keeping spaces intact
     textContainer.innerHTML = originalText
         .split('')
         .map((letter, index) => {
-            // Check if the letter is a space, and add a non-breaking space (&nbsp;)
             if (letter === ' ') {
                 return `<span class="letter space" data-index="${index}">&nbsp;</span>`;
             }
@@ -19,10 +18,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const letters = document.querySelectorAll('.letter');
 
-    textContainer.addEventListener('mousemove', function (event) {
-        const { clientX: x, clientY: y } = event;
-
-        // Move the circle with the mouse
+    // Common function to handle both mouse and touch movement
+    function handleMove(x, y) {
         circle.style.left = `${x - radius}px`;
         circle.style.top = `${y - radius}px`;
         circle.style.display = 'block';
@@ -33,38 +30,36 @@ document.addEventListener('DOMContentLoaded', function () {
             const letterY = letterRect.top + letterRect.height / 2;
             const distance = Math.sqrt((letterX - x) ** 2 + (letterY - y) ** 2);
 
-            // If the letter is within the radius, replace the text and invert color
             if (distance < radius) {
-                // Ensure spaces are handled correctly during hover
-                if (originalText[index] === ' ') {
-                    letter.innerHTML = '&nbsp;'; // Preserve the space
-                } else if (changedText[index]) {
-                    letter.textContent = changedText[index]; // Replace with "SOFTWARE ENGINEER" characters
-                } else {
-                    letter.textContent = ''; // Clear any extra characters from the original text
-                }
-                letter.style.filter = 'invert(1)'; // Invert colors
+                letter.textContent = changedText[index] || '';
+                letter.style.filter = 'invert(1)';
             } else {
-                // Ensure spaces are handled correctly when reverting
-                if (originalText[index] === ' ') {
-                    letter.innerHTML = '&nbsp;'; // Restore the space
-                } else {
-                    letter.textContent = originalText[index]; // Revert to original text
-                }
-                letter.style.filter = 'invert(0)'; // Reset to original colors
+                letter.textContent = originalText[index] || '';
+                letter.style.filter = 'invert(0)';
             }
         });
+    }
+
+    // Mouse move event
+    textContainer.addEventListener('mousemove', function (event) {
+        handleMove(event.clientX, event.clientY);
     });
 
-    textContainer.addEventListener('mouseleave', function () {
-        circle.style.display = 'none'; // Hide the circle when mouse leaves
-        letters.forEach((letter, index) => {
-            if (originalText[index] === ' ') {
-                letter.innerHTML = '&nbsp;'; // Restore the space
-            } else {
-                letter.textContent = originalText[index]; // Reset to original text
-            }
-            letter.style.filter = 'invert(0)'; // Reset all letters to original colors
-        });
+    // Touch move event for mobile
+    textContainer.addEventListener('touchmove', function (event) {
+        const touch = event.touches[0];
+        handleMove(touch.clientX, touch.clientY);
     });
+
+    // Hide circle and reset letters when the mouse or touch leaves
+    function resetText() {
+        circle.style.display = 'none';
+        letters.forEach((letter, index) => {
+            letter.textContent = originalText[index];
+            letter.style.filter = 'invert(0)';
+        });
+    }
+
+    textContainer.addEventListener('mouseleave', resetText);
+    textContainer.addEventListener('touchend', resetText);
 });

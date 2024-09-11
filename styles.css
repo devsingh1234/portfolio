@@ -5,19 +5,16 @@ body {
     height: 100vh;
     background-color: #f86f07;
     margin: 0;
-    font-size: 90px;
-    font-weight: 100px;
-    font-family: "Oswald", sans-serif;
-    position: relative;
     overflow: hidden;
+    font-family: "Oswald", sans-serif;
 }
 
 .text-container {
-    font-size:200px;
-    font-weight: 100px;
-    position: relative;
+    font-size: 10vw; /* Responsive font size */
+    font-weight: 200;
     color: black;
     white-space: nowrap;
+    position: relative;
 }
 
 .letter {
@@ -28,10 +25,22 @@ body {
 
 #circle {
     position: absolute;
-    width: 300px;
-    height: 300px;
+    width: 30vw; /* Adjust size based on screen */
+    height: 30vw;
     background-color: rgba(186, 228, 251, 0.375); /* Light blue circle */
     border-radius: 50%;
     pointer-events: none;
     display: none; /* Hidden by default */
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+    .text-container {
+        font-size: 12vw; /* Slightly larger on small screens */
+    }
+
+    #circle {
+        width: 40vw; /* Larger circle for mobile */
+        height: 40vw;
+    }
 }
