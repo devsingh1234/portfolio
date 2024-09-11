@@ -1,0 +1,37 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f86f07;
+    margin: 0;
+    font-size: 90px;
+    font-weight: 100px;
+    font-family: "Oswald", sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+.text-container {
+    font-size:200px;
+    font-weight: 100px;
+    position: relative;
+    color: black;
+    white-space: nowrap;
+}
+
+.letter {
+    display: inline-block;
+    position: relative;
+    transition: filter 0.5s;
+}
+
+#circle {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background-color: rgba(186, 228, 251, 0.375); /* Light blue circle */
+    border-radius: 50%;
+    pointer-events: none;
+    display: none; /* Hidden by default */
+}
