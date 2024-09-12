@@ -1,65 +1,84 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const textContainer = document.getElementById('textContainer');
-    const circle = document.getElementById('circle');
-    const originalText = "DIVYANSH";
-    const changedText = "DEVELOPER";
-    const radius = 150;
 
-    // Split the text into individual <span> elements, keeping spaces intact
-    textContainer.innerHTML = originalText
-        .split('')
-        .map((letter, index) => {
-            if (letter === ' ') {
-                return `<span class="letter space" data-index="${index}">&nbsp;</span>`;
-            }
-            return `<span class="letter" data-index="${index}">${letter}</span>`;
-        })
-        .join('');
+var circle = document.querySelector("#circle");
+var frame =  document.querySelector(".frame");
+const lerp = (x, y, a) => x * (1 - a) + y * a;
 
-    const letters = document.querySelectorAll('.letter');
+window.addEventListener("mousemove" ,function(dets){
 
-    // Common function to handle both mouse and touch movement
-    function handleMove(x, y) {
-        circle.style.left = `${x - radius}px`;
-        circle.style.top = `${y - radius}px`;
-        circle.style.display = 'block';
+gsap.to(circle ,{
+    x: dets.clientX,
+    y: dets.clientY,
+    duration: .3,
+    ease: Expo
 
-        letters.forEach((letter, index) => {
-            const letterRect = letter.getBoundingClientRect();
-            const letterX = letterRect.left + letterRect.width / 2;
-            const letterY = letterRect.top + letterRect.height / 2;
-            const distance = Math.sqrt((letterX - x) ** 2 + (letterY - y) ** 2);
+})
 
-            if (distance < radius) {
-                letter.textContent = changedText[index] || '';
-                letter.style.filter = 'invert(1)';
-            } else {
-                letter.textContent = originalText[index] || '';
-                letter.style.filter = 'invert(0)';
-            }
-        });
-    }
+})
 
-    // Mouse move event
-    textContainer.addEventListener('mousemove', function (event) {
-        handleMove(event.clientX, event.clientY);
-    });
+frame.addEventListener("mousemove" ,function(dets){
 
-    // Touch move event for mobile
-    textContainer.addEventListener('touchmove', function (event) {
-        const touch = event.touches[0];
-        handleMove(touch.clientX, touch.clientY);
-    });
+    var dims = frame.getBoundingClientRect();
+     var xstart = dims.x;
+     var xend = dims.x + dims.width;
 
-    // Hide circle and reset letters when the mouse or touch leaves
-    function resetText() {
-        circle.style.display = 'none';
-        letters.forEach((letter, index) => {
-            letter.textContent = originalText[index];
-            letter.style.filter = 'invert(0)';
-        });
-    }
+     var zerone = gsap.utils.mapRange(xstart , xend , 0 ,1 , dets.clientX)
+    
+    //  lerp (-50 , 50 , zerone)
 
-    textContainer.addEventListener('mouseleave', resetText);
-    textContainer.addEventListener('touchend', resetText);
-});
+    gsap.to(circle, {
+        scale: 6,
+    })
+
+    gsap.to(".frame span",{
+        color: "#fff",
+        duration: .3,
+        y: "-5vw"
+    })
+
+    gsap.to(".frame span",{
+        x: lerp (-50 , 50 , zerone),
+        duration: .2,
+    })
+
+    gsap.to("#main",{
+        backgroundColor: "#000"
+    })
+
+
+    gsap.to("#text",{
+        textContent: "A PASSIONATE",
+            duration: 0.2,
+            ease: "power2.inOut",
+            color: "#e8842d" 
+    })
+})
+
+frame.addEventListener("mouseleave" ,function(dets){
+
+    gsap.to("#main",{
+        backgroundColor: "#e8842d"
+    })
+
+    gsap.to("#text",{
+        textContent: "HEY 👋 I AM,",
+            duration: 0.2,
+            ease: "power2.inOut",
+            color: "#000" 
+    })
+
+    gsap.to(".frame span",{
+        x: 0
+    })
+
+
+    gsap.to(circle, {
+        scale: 1,
+    })
+
+    gsap.to(".frame span",{
+        color: "#000",
+        duration: .3,
+        y: 0  
+    })
+
+})
